@@ -1,0 +1,46 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+set nocompatible
+filetype off
+set title
+
+let g:deoplete#enable_at_startup = 1
+
+call plug#begin('~/.vim/plugged')
+    if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+    endif
+
+    Plug 'autozimu/LanguageClient-neovim', {
+        \ 'branch': 'next',
+        \ 'do': 'bash install.sh'
+        \ }
+
+call plug#end()
+
+function SetupLspBindings()
+    noremap <buffer> <c-]> :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer> K :call LanguageClient#textDocument_hover()<CR>
+    nnoremap <buffer> <F2> :call LanguageClient#textDocument_rename()<CR>
+endfunction
+
+autocmd FileType cpp,c,rust,python :call SetupLspBindings()
+
+let g:LanguageClient_serverCommands = {
+  \ 'rust': ['rls'],
+  \ 'cpp': ['clangd'],
+  \ 'python': ['pyls'],   
+  \ }
+
+let g:LanguageClient_autoStart = 1 
+
+" deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+filetype plugin indent on
