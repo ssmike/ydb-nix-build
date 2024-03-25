@@ -7,6 +7,9 @@ let
   pythonPkgs = pkgs.callPackage ./python-packages.nix { inherit pkgs; };
   conanpython = pkgs.python3.override { packageOverrides = pythonPkgs; };
 
+  nodeEnv = pkgs.callPackage ./node-env.nix {};
+  nodePkgs = pkgs.callPackage ./node-packages.nix { inherit nodeEnv; };
+
 in 
 pkgs.mkShell {
   packages =
@@ -28,5 +31,6 @@ pkgs.mkShell {
     python3
     antlr3
     conanpython.pkgs.conan
+    nodePkgs."@diplodoc/cli"
   ];
 }
