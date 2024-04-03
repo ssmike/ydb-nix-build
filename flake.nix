@@ -38,7 +38,7 @@
       ];
 
   in {
-    packages.x86_64-linux = {
+    packages.x86_64-linux = rec {
       ydb-dev = pkgs.stdenv.mkDerivation {
         name = "ydb";
         buildInputs = deps;
@@ -92,6 +92,8 @@
           cp ydb/apps/ydb/ydb $out/bin
         '';
       };
+
+      default = ydb-cmake;
     };
 
     devShells.x86_64-linux.default = pkgs.mkShell {
