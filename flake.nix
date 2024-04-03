@@ -39,14 +39,40 @@
 
   in {
     packages.x86_64-linux = {
-      ydb = pkgs.stdenv.mkDerivation {
+      ydb-dev = pkgs.stdenv.mkDerivation {
+        name = "ydb";
+        buildInputs = deps;
+
+        src = pkgs.fetchgit {
+          url = "https://github.com/ydb-platform/ydb";
+          rev = "1a93858f05b42a5a0c54b25b06b73fea9033c9ed";
+          sha256 = "sha256-eqYWfV77eCeRfp+lNcERQ8QJdrrcQwUpsOVBpBKmBA4=";
+        };
+
+        configurePhase = ''
+          true;
+        '';
+
+        buildPhase = ''
+          ls
+          env YA_CACHE_DIR=$PWD/.ya-cache python ya make -r ydb/apps/ydbd ydb/apps/ydb
+        '';
+
+        installPhase = ''
+          mkdir $out/bin
+          cp ydb/apps/ydbd/ydbd $out/bin
+          cp ydb/apps/ydb/ydb $out/bin
+        '';
+      };
+
+      ydb-cmake = pkgs.stdenv.mkDerivation {
         name = "ydb";
         buildInputs = deps;
 
         src = pkgs.fetchgit {
           url = "https://github.com/ydb-platform/ydb";
           rev = "1a93858f05b42a5a0c54b25b06b73fea9033c9ed"; # cmakebuild branch
-          #sha256 = "sha256-MlqJOoMSRuYeG+jl8DFgcNnpEyeRgDCK2JlN9pOqBWA=";
+          sha256 = "sha256-eqYWfV77eCeRfp+lNcERQ8QJdrrcQwUpsOVBpBKmBA4=";
         };
 
         configurePhase = ''
