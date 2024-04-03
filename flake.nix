@@ -19,7 +19,6 @@
         llvm = pkgs.llvmPackages_14;
       in
       with pkgs; [
-        glibc
         clang-tools
         llvm.clang
         llvm.libcxxabi
@@ -37,8 +36,10 @@
         ninja
       ];
 
+    shell-deps = [pkgs.glibc] ++ deps;
+
   in {
-    packages.x86_64-linux = rec {
+    packages.x86_64-linux = {
       ydb-dev = pkgs.stdenv.mkDerivation {
         name = "ydb";
         buildInputs = deps;
@@ -78,6 +79,10 @@
         configurePhase = ''
           mkdir tmp-build
           cd tmp-build
+          mkdir conan-executable
+          ln -s ${conanpython.pkgs.conan}/bin/conan conan-executable/Conan
+          export PATH=$PATH:$PWD/conan-executable
+          export CONAN_USER_HOME=$PWD
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${./clang.toolchain} ..
         '';
 
@@ -93,11 +98,11 @@
         '';
       };
 
-      default = ydb-cmake;
+      #default = ydb-cmake;
     };
 
     devShells.x86_64-linux.default = pkgs.mkShell {
-      packages = deps;
+      packages = shell-deps;
     };
   };
 }
