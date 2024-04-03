@@ -71,8 +71,8 @@
 
         src = pkgs.fetchgit {
           url = "https://github.com/ydb-platform/ydb";
-          rev = "1a93858f05b42a5a0c54b25b06b73fea9033c9ed"; # cmakebuild branch
-          sha256 = "sha256-eqYWfV77eCeRfp+lNcERQ8QJdrrcQwUpsOVBpBKmBA4=";
+          rev = "06f8150219a226f7955787eb5212db4020fe1f42"; # cmakebuild branch
+          sha256 = "sha256-oGnWGiCjLCUU7Toy0SdCHb2wTooC1YFiMwwejkgCgMI=";
         };
 
         configurePhase = ''
