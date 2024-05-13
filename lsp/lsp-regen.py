@@ -22,6 +22,7 @@ base = os.path.join(arc_root, 'compile_commands.json')
 
 files_to_commands = collections.defaultdict(str)
 
+
 def _check_json(_json, abs_files):
     if len(_json) == 0:
         return
