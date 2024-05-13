@@ -8,13 +8,17 @@ FROM=${FROM:-ydb-ru.yandex.net}
 FROMDB=${FROMDB:-/ru/home/mydb}
 
 YA=${YA:-~/work/arcadia/ya}
+YDBCLI=${YDBCLI:-$YA ydb}
+
+echo $YDBCLI
+exit 0
 
 function list() {
-    $YA ydb -e $FROM -d $FROMDB scheme ls $FROMDB$1
+    $YDBCLI -e $FROM -d $FROMDB scheme ls $FROMDB$1
 }
 
 function describe() {
-    $YA ydb -e $FROM -d $FROMDB scheme describe $FROMDB$1 --format proto-json-base64 2>/dev/null
+    $YDBCLI -e $FROM -d $FROMDB scheme describe $FROMDB$1 --format proto-json-base64 2>/dev/null
 }
 
 function describe-table() {
@@ -119,27 +123,27 @@ function transfer() {
         desc=`describe $1/$table`
         if echo $desc | grep '<dir>' >/dev/null; then
             #echo $1/$table is dir
-            trace_call $YA ydb -e $TO -d $TODB scheme mkdir "$TODB$TOPREFIX$1/$table"
+            trace_call $YDBCLI -e $TO -d $TODB scheme mkdir "$TODB$TOPREFIX$1/$table"
             transfer $1/$table
         else
             name=$1/$table
             echo processing $name 
 
             query=`create-table-query "$TODB$TOPREFIX$1/$table" "$desc"`
-            trace_call $YA ydb -e $TO -d $TODB yql -s "$query"
+            trace_call $YDBCLI -e $TO -d $TODB yql -s "$query"
             cache_path=.`sed -e 's$/$__$g' <<<$FROMDB$1/$table`
             if ! [ -f "$cache_path" ] ; then
                 echo 'copying table to ' $cache_path;
                 cache_tmp="$cache_path-tmp"
-                $YA ydb -e $FROM -d $FROMDB table read $FROMDB$1/$table --format json-unicode >table-tmp && mv table-tmp $cache_path
+                $YDBCLI -e $FROM -d $FROMDB table read $FROMDB$1/$table --format json-unicode >table-tmp && mv table-tmp $cache_path
             fi
 
             merged_marker="$cache_path.upload"
             if ! [ -f $merged_marker ]; then
-                trace_call $YA ydb -e $TO -d $TODB import file json --path $TODB$TOPREFIX$1/$table --input-file $cache_path && touch "$merged_marker"
+                trace_call $YDBCLI -e $TO -d $TODB import file json --path $TODB$TOPREFIX$1/$table --input-file $cache_path && touch "$merged_marker"
             fi
 
-            trace_call $YA ydb -e $TO -d $TODB yql -s "`alter-table-query "$TODB$TOPREFIX$1/$table" "$desc"`"
+            trace_call $YDBCLI -e $TO -d $TODB yql -s "`alter-table-query "$TODB$TOPREFIX$1/$table" "$desc"`"
         fi
 
         #echo $desc
