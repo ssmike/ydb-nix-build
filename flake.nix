@@ -16,12 +16,12 @@
 
     deps =
       let
-        llvm = pkgs.llvmPackages_14;
+        llvm = pkgs.llvmPackages_16;
       in
       with pkgs; [
         clang-tools
         llvm.clang
-        llvm.libcxxabi
+        #llvm.libcxxabi
         llvm.libllvm
         llvm.bintools
         libidn
