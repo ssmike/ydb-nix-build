@@ -16,7 +16,7 @@
 
     deps =
       let
-        llvm = pkgs.llvmPackages_16;
+        llvm = pkgs.llvmPackages_18;
       in
       with pkgs; [
         llvm.clang-tools
