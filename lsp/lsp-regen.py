@@ -62,6 +62,7 @@ generated = subprocess.run(command, check=True, capture_output=True).stdout
 extra_includes = (
     ('.ycm',),
     ('.ycm', 'yt'),
+    ('.ycm', 'yp'),
     ('.ycm', 'contrib', 'libs', 'opentelemetry-proto'),
     ('library', 'cpp', 'testing'),
     ('contrib', 'libs', 'protobuf', 'src'),
