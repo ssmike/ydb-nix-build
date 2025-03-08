@@ -64,6 +64,7 @@ extra_includes = (
     ('.ycm', 'yt'),
     ('.ycm', 'yp'),
     ('.ycm', 'contrib', 'libs', 'opentelemetry-proto'),
+    ('.ycm', 'contrib', 'libs', 'googleapis-common-protos'),
     ('library', 'cpp', 'testing'),
     ('contrib', 'libs', 'protobuf', 'src'),
 )
