@@ -30,6 +30,7 @@
         gnumake
         protobuf
         python3
+        python3.pkgs.python-lsp-server
         antlr3
         conanpython.pkgs.conan
         nodePkgs."@diplodoc/cli"
