@@ -19,6 +19,7 @@
         llvm = pkgs.llvmPackages_18;
       in
       with pkgs; [
+        ccls
         llvm.clang-tools
         llvm.clang
         #llvm.libcxxabi
